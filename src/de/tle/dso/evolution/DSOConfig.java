@@ -97,7 +97,7 @@ public class DSOConfig extends Configuration {
       numberOfSuccessiveRunsWithoutImprovement++;
     }
     
-    log.info(population);
+    log.info(population.getAge() + " " + population);
 
     return numberOfSuccessiveRunsWithoutImprovement > 10 || population.getAge() >= 1000;
   }
