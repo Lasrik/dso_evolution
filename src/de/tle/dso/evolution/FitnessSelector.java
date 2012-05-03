@@ -19,7 +19,6 @@ public class FitnessSelector implements Selector {
   public List<List<Individual>> selectParents(Population fromPopulation) {
     List<List<Individual>> result = new LinkedList<List<Individual>>();
 
-    fromPopulation.sort();
     for (int i = 0; i < config.getNumberOfChildren(); i++) {
       List<Individual> parents = new ArrayList<Individual>(config.getNumberOfParents());
       for (int p = 0; p < config.getNumberOfParents(); p++) {
@@ -33,7 +32,6 @@ public class FitnessSelector implements Selector {
 
   @Override
   public Population selectNextGeneration(Population fromPopulation) {
-    fromPopulation.sort();
     int number = config.getPopulationSize();
     List<Individual> newGeneration = fromPopulation.getIndividuals().subList(0, number);
     int age = fromPopulation.getAge() + 1;

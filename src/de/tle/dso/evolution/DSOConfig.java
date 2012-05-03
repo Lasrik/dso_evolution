@@ -32,7 +32,7 @@ public class DSOConfig extends Configuration {
     mutations.add(new IncrementMutation());
     mutations.add(new DecrementMutation());
     mutations.add(new SwitchMutation());
-    
+
     log = Logger.getLogger(getClass());
   }
 
@@ -88,15 +88,15 @@ public class DSOConfig extends Configuration {
 
   @Override
   public boolean terminationCriteriaMet(Population population) {
-    Individual currentBestCandidate = population.getFittest();
-    
+    Individual currentBestCandidate = population.getIndividuals().get(0);
+
     if (bestFitnessSoFar > currentBestCandidate.getFitness()) {
       bestFitnessSoFar = currentBestCandidate.getFitness();
       numberOfSuccessiveRunsWithoutImprovement = 0;
     } else {
       numberOfSuccessiveRunsWithoutImprovement++;
     }
-    
+
     log.info(population.getAge() + " " + population);
 
     return numberOfSuccessiveRunsWithoutImprovement > 10 || population.getAge() >= 1000;
