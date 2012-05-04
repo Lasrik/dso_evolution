@@ -1,5 +1,7 @@
 package de.tle.dso.evolution;
 
+import de.tle.dso.evolution.mutations.AddMutation;
+import de.tle.dso.evolution.mutations.EraseMutation;
 import de.tle.evolution.*;
 import de.tle.evolution.mutation.DecrementMutation;
 import de.tle.evolution.mutation.IncrementMutation;
@@ -15,11 +17,12 @@ public class DSOConfig extends Configuration {
   public static final String PATTERN = "75 WK, 50 KAR";
   public static final int NUMBER_OF_CHILDREN = 100;
   public static final int NUMBER_OF_PARENTS = 2;
+  public static final int PROPABILITY_OF_MUTATION = 60;
   public static final int POPULATION_SIZE = 200;
   public static final int BATTLE_LOST_MALUS = 10000;
   public static final int MAX_PLAYER_ARMY_SIZE = 200;
   public static final int SIMULATE_ROUNDS = 200;
-  protected int bestFitnessSoFar = Integer.MAX_VALUE;
+  protected Individual bestCandidateSoFar = null;
   protected int numberOfSuccessiveRunsWithoutImprovement = 0;
   protected DSOFactory factory = new DSOFactory();
   protected DSOFitnessFunction fitnessFunction = new DSOFitnessFunction(this);
@@ -35,6 +38,11 @@ public class DSOConfig extends Configuration {
     mutations.add(new IncrementMutation());
     mutations.add(new DecrementMutation());
     mutations.add(new SwitchMutation());
+    mutations.add(new SwitchMutation());
+    mutations.add(new SwitchMutation());
+    mutations.add(new SwitchMutation());
+    mutations.add(new AddMutation(this));
+    mutations.add(new EraseMutation(this));
 
     log = Logger.getLogger(getClass());
   }
@@ -56,7 +64,7 @@ public class DSOConfig extends Configuration {
 
   @Override
   public int getPropabilityOfMutation() {
-    return 40;
+    return PROPABILITY_OF_MUTATION;
   }
 
   @Override
@@ -92,12 +100,11 @@ public class DSOConfig extends Configuration {
   @Override
   public boolean terminationCriteriaMet(Population population) {
     Individual currentBestCandidate = population.getIndividuals().get(0);
-
-    if (bestFitnessSoFar > currentBestCandidate.getFitness()) {
-      bestFitnessSoFar = currentBestCandidate.getFitness();
-      numberOfSuccessiveRunsWithoutImprovement = 0;
-    } else {
+    if (currentBestCandidate.equals(bestCandidateSoFar)) {
       numberOfSuccessiveRunsWithoutImprovement++;
+    } else {
+      bestCandidateSoFar = currentBestCandidate;
+      numberOfSuccessiveRunsWithoutImprovement = 0;
     }
 
     log.info(population.getAge() + " " + population);
