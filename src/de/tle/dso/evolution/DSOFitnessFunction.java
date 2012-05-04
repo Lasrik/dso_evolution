@@ -3,6 +3,9 @@ package de.tle.dso.evolution;
 import de.tle.dso.sim.Simulation;
 import de.tle.dso.sim.SimulationResult;
 import de.tle.dso.sim.battle.InvalidArmyException;
+import de.tle.dso.units.Army;
+import de.tle.dso.units.Unit;
+import de.tle.dso.units.util.UnitPatternHelper;
 import de.tle.evolution.FitnessFunction;
 import de.tle.evolution.Individual;
 import de.tle.evolution.Population;
@@ -20,34 +23,9 @@ public class DSOFitnessFunction extends FitnessFunction {
   }
 
   @Override
-  public void evaluate(Individual individual) {
-    String attackingArmyPattern = config.getMapper().mapIndividualToArmyPattern(individual);
-
-    Simulation simulation = new Simulation(attackingArmyPattern, DSOConfig.PATTERN);
-    int fitness;
-
-    try {
-      SimulationResult simResult = simulation.simulate();
-
-      int resourceCost = simResult.getMaxResourceCosts().totalWeightPoints();
-      int numberOfArmies = individual.getGenom().crossSum();
-
-      fitness = resourceCost + numberOfArmies;
-
-      if (!simResult.isAlwaysWin()) {
-        fitness += DSOConfig.LOSS_MALUS;
-      }
-    } catch (InvalidArmyException ex) {
-      fitness = Integer.MAX_VALUE;
-    }
-
-    individual.setFitness(fitness);
-  }
-
-  @Override
   public void evaluate(Population population) {
-    ExecutorService executor = Executors.newFixedThreadPool(2);
-    
+    ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
     for (Individual individual : population) {
       DSOFitnessRunner runner = new DSOFitnessRunner(individual);
       executor.submit(runner);
@@ -59,6 +37,44 @@ public class DSOFitnessFunction extends FitnessFunction {
     } catch (InterruptedException ex) {
       Logger.getLogger(getClass()).warn("DSO Runner liefen nicht zu Ende.", ex);
     }
+  }
+
+  @Override
+  public void evaluate(Individual individual) {
+    if (fitnessAlreadyCalculated(individual)) {
+      return;
+    }
+
+    String attackingArmyPattern = config.getMapper().getPatternFromIndividual(individual);
+
+    Simulation simulation = new Simulation(attackingArmyPattern, DSOConfig.PATTERN);
+    int fitness;
+
+    try {
+      fitness = calculateFitness(simulation, attackingArmyPattern);
+    } catch (InvalidArmyException ex) {
+      // Ungültige Armee - maximaler Fitness Malus
+      fitness = Integer.MAX_VALUE;
+    }
+
+    individual.setFitness(fitness);
+  }
+
+  private boolean fitnessAlreadyCalculated(Individual individual) {
+    return individual.getFitness() > 0;
+  }
+
+  private int calculateFitness(Simulation simulation, String attackingArmyPattern) throws InvalidArmyException {
+    SimulationResult simResult = simulation.simulate();
+    int resourceCost = simResult.getMaxResourceCosts().totalWeightPoints();
+
+    int fitness = resourceCost;
+
+    if (!simResult.isAlwaysWin()) {
+      fitness += DSOConfig.BATTLE_LOST_MALUS;
+    }
+
+    return fitness;
   }
 
   private class DSOFitnessRunner implements Runnable {

@@ -11,7 +11,7 @@ import de.tle.evolution.Population;
 import de.tle.evolution.Validator;
 
 class DSOValidator implements Validator {
-  
+
   private DSOConfig config;
 
   public DSOValidator(DSOConfig config) {
@@ -21,7 +21,7 @@ class DSOValidator implements Validator {
   @Override
   public void validate(Population population) {
     for (Individual individual : population) {
-      String armyPattern = config.getMapper().mapIndividualToArmyPattern(individual);
+      String armyPattern = config.getMapper().getPatternFromIndividual(individual);
       Army army = UnitPatternHelper.createArmyFromPattern(armyPattern);
       if (!army.isValid()) {
         Individual newIndividual = config.getFactory().createRandomIndividual();

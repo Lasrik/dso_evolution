@@ -12,11 +12,11 @@ import org.apache.log4j.Logger;
 
 public class DSOConfig extends Configuration {
 
-  public static final String PATTERN = "150PL, 1ST";
-  public static final int NUMBER_OF_CHILDREN = 10;
+  public static final String PATTERN = "79SL, 1EB";
+  public static final int NUMBER_OF_CHILDREN = 100;
   public static final int NUMBER_OF_PARENTS = 2;
-  public static final int POPULATION_SIZE = 50;
-  public static final int LOSS_MALUS = 10000;
+  public static final int POPULATION_SIZE = 200;
+  public static final int BATTLE_LOST_MALUS = 10000;
   protected int bestFitnessSoFar = Integer.MAX_VALUE;
   protected int numberOfSuccessiveRunsWithoutImprovement = 0;
   protected DSOFactory factory = new DSOFactory();
@@ -99,7 +99,7 @@ public class DSOConfig extends Configuration {
 
     log.info(population.getAge() + " " + population);
 
-    return numberOfSuccessiveRunsWithoutImprovement > 10 || population.getAge() >= 1000;
+    return numberOfSuccessiveRunsWithoutImprovement > 100 || population.getAge() >= 1000;
   }
 
   public Mapper getMapper() {

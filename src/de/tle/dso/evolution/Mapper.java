@@ -4,7 +4,7 @@ import de.tle.evolution.Individual;
 
 public class Mapper {
 
-  public String mapIndividualToArmyPattern(Individual individual) {
+  public String getPatternFromIndividual(Individual individual) {
     int[] genom = individual.getGenom().getChromosomes();
 
     StringBuilder sb = new StringBuilder();
