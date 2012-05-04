@@ -12,11 +12,13 @@ import org.apache.log4j.Logger;
 
 public class DSOConfig extends Configuration {
 
-  public static final String PATTERN = "79SL, 1EB";
+  public static final String PATTERN = "75 WK, 50 KAR";
   public static final int NUMBER_OF_CHILDREN = 100;
   public static final int NUMBER_OF_PARENTS = 2;
   public static final int POPULATION_SIZE = 200;
   public static final int BATTLE_LOST_MALUS = 10000;
+  public static final int MAX_PLAYER_ARMY_SIZE = 200;
+  public static final int SIMULATE_ROUNDS = 200;
   protected int bestFitnessSoFar = Integer.MAX_VALUE;
   protected int numberOfSuccessiveRunsWithoutImprovement = 0;
   protected DSOFactory factory = new DSOFactory();
@@ -25,6 +27,7 @@ public class DSOConfig extends Configuration {
   protected GeneticOperator geneticOperator = new CrossOverOperator();
   protected List<Mutation> mutations = new LinkedList<Mutation>();
   protected Validator validator = new DSOValidator(this);
+  protected Comparator<Individual> comparator = new FitnessComparator();
   private Mapper mapper = new Mapper();
   private Logger log;
 
@@ -83,7 +86,7 @@ public class DSOConfig extends Configuration {
 
   @Override
   public Comparator<Individual> getFitnessComparator() {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return comparator;
   }
 
   @Override

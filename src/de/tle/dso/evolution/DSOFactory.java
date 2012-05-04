@@ -33,6 +33,8 @@ public class DSOFactory extends Factory {
       for (int i = 0; i < genomArray.length; i++) {
         genomArray[i] = number;
       }
+      Genom genom = new Genom(genomArray);
+      individuals.add(new Individual(genom));
     }
   }
 

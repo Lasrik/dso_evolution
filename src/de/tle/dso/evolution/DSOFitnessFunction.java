@@ -45,15 +45,18 @@ public class DSOFitnessFunction extends FitnessFunction {
       return;
     }
 
-    String attackingArmyPattern = config.getMapper().getPatternFromIndividual(individual);
-
-    Simulation simulation = new Simulation(attackingArmyPattern, DSOConfig.PATTERN);
     int fitness;
 
     try {
-      fitness = calculateFitness(simulation, attackingArmyPattern);
-    } catch (InvalidArmyException ex) {
-      // Ungültige Armee - maximaler Fitness Malus
+      String attackingArmyPattern = config.getMapper().getPatternFromIndividual(individual);
+
+      Simulation simulation = new Simulation(attackingArmyPattern, DSOConfig.PATTERN);
+      simulation.setNumberOfRounds(DSOConfig.SIMULATE_ROUNDS);
+      SimulationResult simResult = simulation.simulate();
+
+      fitness = calculateFitness(simResult);
+    } catch (Exception ex) {
+      // Ungültige Armee - maximaler Fitness Malus. Individuum ist nicht lebensfähig
       fitness = Integer.MAX_VALUE;
     }
 
@@ -61,11 +64,10 @@ public class DSOFitnessFunction extends FitnessFunction {
   }
 
   private boolean fitnessAlreadyCalculated(Individual individual) {
-    return individual.getFitness() > 0;
+    return individual.getFitness() > Integer.MIN_VALUE;
   }
 
-  private int calculateFitness(Simulation simulation, String attackingArmyPattern) throws InvalidArmyException {
-    SimulationResult simResult = simulation.simulate();
+  private int calculateFitness(SimulationResult simResult) throws InvalidArmyException {
     int resourceCost = simResult.getMaxResourceCosts().totalWeightPoints();
 
     int fitness = resourceCost;
