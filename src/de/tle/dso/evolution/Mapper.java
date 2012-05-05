@@ -27,19 +27,13 @@ public class Mapper {
             sb.append("S");
             break;
           case 4:
-            sb.append("E");
-            break;
-          case 5:
             sb.append("B");
             break;
-          case 6:
+          case 5:
             sb.append("LB");
             break;
-          case 7:
+          case 6:
             sb.append("A");
-            break;
-          case 8:
-            sb.append("K");
             break;
         }
         sb.append(", ");
