@@ -24,7 +24,7 @@ public class DSOConfig extends Configuration {
   public static final int SIMULATE_ROUNDS = 200;
   protected Individual bestCandidateSoFar = null;
   protected int numberOfSuccessiveRunsWithoutImprovement = 0;
-  protected DSOFactory factory = new DSOFactory();
+  protected DSOFactory factory = new DSOFactory(this);
   protected DSOFitnessFunction fitnessFunction = new DSOFitnessFunction(this);
   protected Selector selector = new FitnessSelector(this);
   protected GeneticOperator geneticOperator = new CrossOverOperator();

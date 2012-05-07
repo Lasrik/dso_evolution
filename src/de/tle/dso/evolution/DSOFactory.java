@@ -9,6 +9,12 @@ import java.util.List;
 
 public class DSOFactory extends Factory {
 
+  private DSOConfig config;
+
+  public DSOFactory(DSOConfig config) {
+    this.config = config;
+  }
+
   @Override
   public Population createInitialPopulation(final int populationSize) {
     List<Individual> individuals = new ArrayList<Individual>(populationSize);
