@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 public class DSOFitnessFunction extends FitnessFunction {
 
+  public static final int INVALID_GENOM_MALUS = 1000000;
   protected DSOConfig config;
 
   public DSOFitnessFunction(DSOConfig config) {
@@ -46,14 +47,13 @@ public class DSOFitnessFunction extends FitnessFunction {
       return;
     }
 
-    int fitness;
+    int fitness = 0;
 
     try {
       fitness = calculateFitness(individual);
     } catch (Exception ex) {
       // Ungültige Armee - maximaler Fitness Malus. Individuum ist nicht lebensfähig
-      Logger.getLogger(getClass()).info(ex, ex);
-      fitness = Integer.MAX_VALUE;
+      fitness = INVALID_GENOM_MALUS;
     }
 
     individual.setFitness(fitness);
@@ -62,13 +62,13 @@ public class DSOFitnessFunction extends FitnessFunction {
   private int calculateFitness(Individual individual) throws InvalidArmyException {
     SimulationResult simResult = simulateBattle(individual);
 
-    int losses = resourceCostsForUnitsLostInBattle(simResult);
-    int buildCosts = buildCosts(individual);
-    buildCosts = (int) Math.log(buildCosts);
+    int fitness = resourceCostsForUnitsLostInBattle(simResult);
 
-    double fitness = losses + buildCosts;
+    if (fitness < 1000) {
+      fitness += Math.log(buildCosts(individual));
+    }
 
-    return (int) fitness;
+    return fitness;
   }
 
   private SimulationResult simulateBattle(Individual individual) throws InvalidArmyException {
@@ -82,7 +82,7 @@ public class DSOFitnessFunction extends FitnessFunction {
   }
 
   private boolean fitnessAlreadyCalculated(Individual individual) {
-    return individual.getFitness() > Integer.MIN_VALUE;
+    return individual.isFitnessSet();
   }
 
   private int resourceCostsForUnitsLostInBattle(SimulationResult simResult) throws InvalidArmyException {

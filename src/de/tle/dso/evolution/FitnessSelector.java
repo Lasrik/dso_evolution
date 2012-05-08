@@ -5,8 +5,10 @@ import de.tle.evolution.Population;
 import de.tle.evolution.Random;
 import de.tle.evolution.Selector;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class FitnessSelector implements Selector {
 
@@ -36,12 +38,25 @@ public class FitnessSelector implements Selector {
   @Override
   public Population selectNextGeneration(Population fromPopulation) {
     int number = config.getPopulationSize();
-    List<Individual> newGeneration = fromPopulation.getIndividuals().subList(0, number);
+
+    Set<Individual> newGeneration = new HashSet<Individual>();
+    for (Individual individual : fromPopulation.getIndividuals()) {
+      newGeneration.add(individual);
+      if (newGeneration.size() >= number) {
+        break;
+      }
+    }
+
+    while (newGeneration.size() < number) {
+      Individual filler = config.getFactory().createRandomIndividual();
+      config.getFitnessFunction().evaluate(filler);
+      newGeneration.add(filler);
+    }
+
     int age = fromPopulation.getAge() + 1;
 
     Population result = new Population(new ArrayList(newGeneration), age);
 
     return result;
-
   }
 }

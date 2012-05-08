@@ -20,8 +20,10 @@ public class DSOConfig extends Configuration {
   public static final int PROPABILITY_OF_MUTATION = 60;
   public static final int POPULATION_SIZE = 200;
   public static final int BATTLE_LOST_MALUS = 10000;
-  public static final int MAX_PLAYER_ARMY_SIZE = 200;
-  public static final int SIMULATE_ROUNDS = 200;
+  public static final int MAX_PLAYER_ARMY_SIZE = 250;
+  public static final int SIMULATE_ROUNDS = 100;
+  public static final int GENOM_SIZE = 7;
+
   protected Individual bestCandidateSoFar = null;
   protected int numberOfSuccessiveRunsWithoutImprovement = 0;
   protected DSOFactory factory = new DSOFactory(this);

@@ -6,6 +6,7 @@ import de.tle.evolution.Individual;
 import de.tle.evolution.Population;
 import java.util.ArrayList;
 import java.util.List;
+import static de.tle.dso.evolution.DSOConfig.*;
 
 public class DSOFactory extends Factory {
 
@@ -34,8 +35,8 @@ public class DSOFactory extends Factory {
 
   private void createEvenlyDistributedArmy(List<Individual> individuals, final int populationSize) {
     if (individuals.size() < populationSize) {
-      int[] genomArray = new int[Genom.NUMBER_OF_CHROMOSOMES];
-      int number = Genom.MAX_SINGLE_VALUE / Genom.NUMBER_OF_CHROMOSOMES;
+      int[] genomArray = new int[GENOM_SIZE];
+      int number = MAX_PLAYER_ARMY_SIZE / GENOM_SIZE;
       for (int i = 0; i < genomArray.length; i++) {
         genomArray[i] = number;
       }
@@ -45,10 +46,10 @@ public class DSOFactory extends Factory {
   }
 
   private void createArmiesWithOnlyOneType(List<Individual> individuals, final int populationSize) {
-    int numberOfFixedArmies = Math.min(populationSize, Genom.NUMBER_OF_CHROMOSOMES);
+    int numberOfFixedArmies = Math.min(populationSize, GENOM_SIZE);
     for (int i = 0; i < numberOfFixedArmies; i++) {
-      int[] genomArray = new int[Genom.NUMBER_OF_CHROMOSOMES];
-      genomArray[i] = Genom.MAX_SINGLE_VALUE;
+      int[] genomArray = new int[GENOM_SIZE];
+      genomArray[i] = MAX_PLAYER_ARMY_SIZE;
       Genom genom = new Genom(genomArray);
       individuals.add(new Individual(genom));
     }
@@ -56,6 +57,6 @@ public class DSOFactory extends Factory {
 
   @Override
   public Individual createRandomIndividual() {
-    return Individual.createRandom();
+    return Individual.createRandom(GENOM_SIZE, MAX_PLAYER_ARMY_SIZE, MAX_PLAYER_ARMY_SIZE);
   }
 }
