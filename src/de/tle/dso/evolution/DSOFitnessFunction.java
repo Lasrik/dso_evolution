@@ -61,6 +61,7 @@ public class DSOFitnessFunction extends FitnessFunction {
 
   private int calculateFitness(Individual individual) throws InvalidArmyException {
     SimulationResult simResult = simulateBattle(individual);
+    individual.setCustomPayload(simResult);
 
     int fitness = resourceCostsForUnitsLostInBattle(simResult);
 

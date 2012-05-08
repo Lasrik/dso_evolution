@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 
 public class DSOConfig extends Configuration {
 
-  public static final String PATTERN = "100SL 60WL";
+  public static final String PATTERN = "60SL 100WL";
   public static final int NUMBER_OF_CHILDREN = 100;
   public static final int NUMBER_OF_PARENTS = 2;
   public static final int PROPABILITY_OF_MUTATION = 60;
