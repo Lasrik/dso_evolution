@@ -1,7 +1,7 @@
 package de.tle.dso.evolution;
 
-import de.tle.dso.evolution.mutations.AddMutation;
-import de.tle.dso.evolution.mutations.EraseMutation;
+import de.tle.dso.evolution.mutations.AddOneChromosomToAnotherMutation;
+import de.tle.dso.evolution.mutations.EraseChromosomMutation;
 import de.tle.evolution.*;
 import de.tle.evolution.mutation.DecrementMutation;
 import de.tle.evolution.mutation.IncrementMutation;
@@ -21,9 +21,10 @@ public class DSOConfig extends Configuration {
   public static final int POPULATION_SIZE = 200;
   public static final int BATTLE_LOST_MALUS = 10000;
   public static final int MAX_PLAYER_ARMY_SIZE = 250;
-  public static final int SIMULATE_ROUNDS = 100;
+  public static final int SIMULATE_ROUNDS = 500;
   public static final int GENOM_SIZE = 7;
-
+  public static final int MIN_RUNS = 50;
+  public static final int MAX_RUNS = 1000;
   protected Individual bestCandidateSoFar = null;
   protected int numberOfSuccessiveRunsWithoutImprovement = 0;
   protected DSOFactory factory = new DSOFactory(this);
@@ -43,8 +44,8 @@ public class DSOConfig extends Configuration {
     mutations.add(new SwitchMutation());
     mutations.add(new SwitchMutation());
     mutations.add(new SwitchMutation());
-    mutations.add(new AddMutation(this));
-    mutations.add(new EraseMutation(this));
+    mutations.add(new AddOneChromosomToAnotherMutation(this));
+    mutations.add(new EraseChromosomMutation(this));
 
     log = Logger.getLogger(getClass());
   }
@@ -111,7 +112,7 @@ public class DSOConfig extends Configuration {
 
     log.info(population.getAge() + " " + population);
 
-    return numberOfSuccessiveRunsWithoutImprovement > 100 || population.getAge() >= 1000;
+    return numberOfSuccessiveRunsWithoutImprovement > MIN_RUNS || population.getAge() >= MAX_RUNS;
   }
 
   public Mapper getMapper() {

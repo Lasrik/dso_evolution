@@ -4,11 +4,11 @@ import de.tle.dso.evolution.DSOConfig;
 import de.tle.evolution.Individual;
 import de.tle.evolution.mutation.Mutation;
 
-public class EraseMutation implements Mutation {
+public class EraseChromosomMutation implements Mutation {
 
   protected DSOConfig config;
 
-  public EraseMutation(DSOConfig config) {
+  public EraseChromosomMutation(DSOConfig config) {
     this.config = config;
   }
 

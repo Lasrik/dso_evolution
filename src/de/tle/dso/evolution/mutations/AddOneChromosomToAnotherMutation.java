@@ -5,11 +5,11 @@ import de.tle.evolution.Genom;
 import de.tle.evolution.Individual;
 import de.tle.evolution.mutation.Mutation;
 
-public class AddMutation implements Mutation {
+public class AddOneChromosomToAnotherMutation implements Mutation {
 
   protected DSOConfig config;
 
-  public AddMutation(DSOConfig config) {
+  public AddOneChromosomToAnotherMutation(DSOConfig config) {
     this.config = config;
   }
 
@@ -19,10 +19,14 @@ public class AddMutation implements Mutation {
     int max = genom.length();
 
     int random = getRandom(max);
-    int anotherRandom = getAnotherRandom(max, random);
+    int value1 = genom.getChromosom(random);
 
-    int value = genom.getChromosom(random);
-    genom.setChromosom(anotherRandom, value);
+    int anotherRandom = getAnotherRandom(max, random);
+    int value2 = genom.getChromosom(anotherRandom);
+
+    int newValue = value1 + value2;
+
+    genom.setChromosom(anotherRandom, newValue);
     genom.setChromosom(random, 0);
   }
 
